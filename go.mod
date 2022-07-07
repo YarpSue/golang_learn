@@ -2,4 +2,4 @@ module testmode
 
 go 1.18
 
-require golang.org/x/net v0.0.0-20220630215102-69896b714898 // indirect
+require golang.org/x/net v0.0.0-20220706163947-c90051bbdb60 // indirect

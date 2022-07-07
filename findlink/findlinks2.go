@@ -20,6 +20,7 @@ func main() {
 	}
 }
 
+// 这块能够用匿名函数进行实现的 在links中有
 func findLinks(url string) ([]string, error) {
 	r, err := http.Get(url)
 	if err != nil {
