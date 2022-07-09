@@ -1,10 +1,7 @@
 package interface_demo
 
 import (
-	"bytes"
 	"io"
-	"os"
-	"time"
 )
 
 type Reader interface {
@@ -25,6 +22,10 @@ type ReadWriter interface {
 var w io.Writer
 var rwc io.ReadWriter
 
+// 空接口没有任何方法
+var any interface{} = 16
+
+/*
 func main() {
 	// 表达一个类型属于某个接口 只要这个类型实现了某个接口
 	w = os.Stdout
@@ -32,4 +33,8 @@ func main() {
 	w = rwc
 	//rwc = w lacks Read Interface achieve
 	//w = time.Second
+
+	any = 16
 }
+*/
+
