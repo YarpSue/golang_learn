@@ -14,5 +14,3 @@ func (t *task) do() {
 	}
 	t.result <- sum
 }
-
-func InitTask(taskchan chan task, r chan int)
