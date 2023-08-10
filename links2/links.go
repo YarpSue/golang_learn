@@ -1,4 +1,4 @@
-package links
+package links2
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+// Extract makes an HTTP GET request to the specified URL, parses
+// the response as HTML, and returns the links in the HTML document.
 func Extract(url string) ([]string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -13,13 +15,15 @@ func Extract(url string) ([]string, error) {
 	}
 	if resp.StatusCode != http.StatusOK {
 		resp.Body.Close()
-		return nil, fmt.Errorf("getting %s : %s", url, err)
+		return nil, fmt.Errorf("getting %s: %s", url, resp.Status)
 	}
+
 	doc, err := html.Parse(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("parsing %s as HTML: %v\n", url, err)
+		return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 	}
+
 	var links []string
 	visitNode := func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "a" {
@@ -29,7 +33,7 @@ func Extract(url string) ([]string, error) {
 				}
 				link, err := resp.Request.URL.Parse(a.Val)
 				if err != nil {
-					continue
+					continue // ignore bad URLs
 				}
 				links = append(links, link.String())
 			}
@@ -39,12 +43,14 @@ func Extract(url string) ([]string, error) {
 	return links, nil
 }
 
-
-// 可变参数的写法
-func Sum(vals...int) int {
-	total := 0
-	for _, val := range vals {
-		total += val
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+	if pre != nil {
+		pre(n)
 	}
-	return total
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		forEachNode(c, pre, post)
+	}
+	if post != nil {
+		post(n)
+	}
 }
